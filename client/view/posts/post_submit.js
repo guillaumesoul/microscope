@@ -10,11 +10,18 @@ Template.postSubmit.events({
 
 		//post._id = Posts.insert(post);
 		Meteor.call('post', post, function(error, id) {
-			if (eror) {
-				return alert(error.reason);
+			if (error) {
+				//affiche l'erreur à l'utilisateur
+				throwError(error.reason);
+				//Pour une erreur d'un post deja existant nous renvoyer ici
+				if (error.error === 302) {
+					Meteor.Router.to('postPage', error.details)
+				} 
+
 			} 
-			Meteor.Router.to('postPage',id); 
-			
+			else {
+					Meteor.Router.to('postPage',id); 
+				}
 		});
 	}
 });
